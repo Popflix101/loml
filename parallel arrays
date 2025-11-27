@@ -1,0 +1,248 @@
+Public Class Form1
+    Dim icount As Integer
+    Dim StudentNo() As Long
+    Dim Surname() As String
+    Dim Initials() As String
+    Dim SubjectCode() As String
+    Dim TestMark1() As Integer
+    Dim TestMark2() As Integer
+    Dim Pract1() As Integer
+    Dim Pract2() As Integer
+    Dim IE() As Integer
+    Dim Isat() As Integer
+
+    Dim Year_Mark() As Double
+    Dim avrg() As Double
+    Dim outputfile As IO.StreamWriter
+    Dim MasterFile As String = "DataFile.txt"
+    Private Sub BtnAddData_Click(sender As Object, e As EventArgs) Handles BtnAddData.Click
+        'redimension the array and keep the exixsting]g data 
+        Dim x As Integer
+        ReDim Preserve StudentNo(icount)
+        ReDim Preserve Surname(icount)
+        ReDim Preserve Initials(icount)
+        ReDim Preserve SubjectCode(icount)
+        ReDim Preserve TestMark1(icount)
+        ReDim Preserve TestMark2(icount)
+        ReDim Preserve Pract1(icount)
+        ReDim Preserve Pract2(icount)
+        ReDim Preserve IE(icount)
+        ReDim Preserve Isat(icount)
+
+        ReDim Preserve Year_Mark(icount)
+        ReDim Preserve avrg(icount)
+
+        'assigning data to arrays from the controls  
+        StudentNo(icount) = txtStudentNo.Text.Trim
+        Surname(icount) = txtSurname.Text.Trim
+        Initials(icount) = txtInitials.Text.Trim
+        SubjectCode(icount) = CmbSubjectCode.Text.Trim
+        TestMark1(icount) = txtTest1.Text.Trim
+        TestMark2(icount) = txtTest2.Text.Trim
+        Pract1(icount) = txtPrac1.Text.Trim
+        Pract2(icount) = txtPrac2.Text.Trim
+        IE(icount) = txtInternalexam.Text.Trim
+        Isat(icount) = txtIsat.Text.Trim
+
+
+        Year_Mark(icount) = CalcYearMark(icount)
+        avrg(icount) = CalcAverage(icount)
+
+        'Increament icount by 1
+        icount = icount + 1
+
+        'Clear the data from controls 
+        txtStudentNo.Clear()
+        txtSurname.Clear()
+        txtInitials.Clear()
+        CmbSubjectCode.Text = ""
+        txtTest1.Clear()
+        txtTest2.Clear()
+        txtPrac1.Clear()
+        txtPrac2.Clear()
+        txtInternalexam.Clear()
+        txtIsat.Clear()
+
+        'Set the focus to the studentno control ot Textbox
+        txtStudentNo.Focus()
+    End Sub
+
+    Private Sub BtnDisplay_Click(sender As Object, e As EventArgs) Handles BtnDisplay.Click
+        Dim i As Integer
+        LstDisplay.Items.Clear()
+        'creating header
+        LstDisplay.Items.Add("Cnt" & Space(5) & "StudentNo" & vbTab & "Surname" & vbTab & vbTab & "Init" & vbTab & "S_Code" & vbTab & "Test1" & vbTab & "Test2" & vbTab & "Prac1" & vbTab & "Prac2" & vbTab & "IE" & vbTab & "ISat" & vbTab & "Avg" & vbTab & "Y_Mark").ToString.ToUpper()
+        LstDisplay.Items.Add("=======================================================================================================================================================================================================================================")
+        For i = 0 To UBound(StudentNo)
+            LstDisplay.Items.Add(i + 1 & Space(5) & StudentNo(i).ToString.ToUpper & vbTab & Surname(i).ToUpper.PadLeft(12) & vbTab &
+                                 Initials(i).ToUpper & vbTab & SubjectCode(i) & vbTab & TestMark1(i) & vbTab & TestMark2(i) & vbTab & Pract1(i) & vbTab & Pract2(i) & vbTab & IE(i) & vbTab & Isat(i) & vbTab & CalcAverage(i) & vbTab & CalcYearMark(i)).ToString.ToUpper()
+        Next
+    End Sub
+
+    Private Sub BtnSort_Click(sender As Object, e As EventArgs) Handles BtnSort.Click
+        Dim Srt As Integer
+        Dim swapped As Boolean = True
+
+        Dim j As Integer
+        For Srt = LBound(Surname) To UBound(Surname) - 1
+            For j = LBound(Surname) To UBound(Surname) - 1
+
+                If StudentNo(j) > StudentNo(j + 1) Then
+                    Dim temp As Long = StudentNo(j + 1)
+                    StudentNo(j + 1) = StudentNo(j)
+                    StudentNo(j) = temp
+
+                    Dim Strtemp As String = Surname(j + 1)
+                    Surname(j + 1) = Surname(j)
+                    Surname(j) = Strtemp
+
+                    Dim iStrtemp As String = Initials(j + 1)
+                    Initials(j + 1) = Initials(j)
+                    Initials(j) = iStrtemp
+
+                    Dim iTest As Integer = TestMark1(j + 1)
+                    TestMark1(j + 1) = TestMark1(j)
+                    TestMark1(j) = iTest
+
+                    Dim iTest2 As Integer = TestMark2(j + 1)
+                    TestMark2(j + 1) = TestMark2(j)
+                    TestMark2(j) = iTest2
+
+                    Dim iPra1 As Integer = Pract1(j + 1)
+                    Pract1(j + 1) = Pract1(j)
+                    Pract1(j) = iPra1
+
+                    Dim iPra2 As Integer = Pract2(j + 1)
+                    Pract2(j + 1) = Pract2(j)
+                    Pract2(j) = iPra2
+
+                    Dim iIE As Integer = IE(j + 1)
+                    IE(j + 1) = IE(j)
+                    IE(j) = iIE
+
+                    Dim iISat As Integer = Isat(j + 1)
+                    Isat(j + 1) = Isat(j)
+                    Isat(j) = iISat
+
+                    Dim AvgTemp As Double = avrg(j + 1)
+                    avrg(j + 1) = avrg(j)
+                    avrg(j) = AvgTemp
+
+                    Dim Y_MarkTemp As Double = Year_Mark(j + 1)
+                    Year_Mark(j + 1) = Year_Mark(j)
+                    Year_Mark(j) = Y_MarkTemp
+
+                End If
+            Next
+
+        Next
+
+    End Sub
+    Public Function CalcAverage(ByVal av As Integer)
+        Dim average As Double
+        average = ((TestMark1(av) + TestMark2(av)) + (Pract1(av) + Pract2(av)) + Isat(av)) / 6
+        Return average.ToString("N1")
+    End Function
+
+    Public Function CalcYearMark(ByVal Mark As Integer)
+        Dim Y_Mark As Double
+        Y_Mark = (((TestMark1(Mark) + TestMark2(Mark)) * 0.1) + ((Pract1(Mark) + Pract2(Mark)) * 0.25) + ((IE(Mark)) * 0.3))
+        Return Y_Mark.ToString("N1")
+    End Function
+
+    Private Sub BtnSearch_Click(sender As Object, e As EventArgs) Handles BtnSearch.Click
+        Dim StrSearch As Long
+        Dim ifound As Boolean
+        Dim i As Integer
+        StrSearch = txtStudentNo.Text.Trim
+        While i <= UBound(StudentNo)
+            If StrSearch = StudentNo(i) Then
+                ifound = True
+                MessageBox.Show("The student is found on the list" & Environment.NewLine &
+                                  "And is on the position " & i + 1 & "  on the list", "Search Messagebox", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                LstDisplay.SelectedIndex = i + 2
+                Exit While
+                Exit Sub
+            End If
+            i = i + 1
+        End While
+        If ifound = False Then
+            MessageBox.Show("The student that matches your search criteria is not on the list ")
+        End If
+    End Sub
+
+    Private Sub BtnSaveData_Click(sender As Object, e As EventArgs) Handles BtnSaveData.Click
+        If IO.File.Exists(MasterFile) Then
+            If MessageBox.Show("The system Checked the file and it exists" & Environment.NewLine &
+                               "You can Click Ok button to start writing Data on the file or click Cancel button to stop writting", "Data Writting Information", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) Then
+                If vbOK Then
+                    outputfile = IO.File.AppendText(MasterFile)
+                    Dim j As Integer
+                    For j = 0 To UBound(StudentNo)
+                        outputfile.WriteLine(StudentNo(j) & "," & Surname(j) & "," & Initials(j) & "," & SubjectCode(j) & "," & TestMark1(j) & "," & TestMark2(j) & "," & Pract1(j) & "," & Pract2(j) & "," & IE(j) & "," & Isat(j))
+                    Next
+                    MessageBox.Show("The Data is successfully written on the file ", "Data writting Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    outputfile.Close()
+                    Exit Sub
+                Else
+                    Exit Sub
+                End If
+            Else
+
+            End If
+        Else
+            If MessageBox.Show("The system Checked the file and it does not exists" & Environment.NewLine &
+                               "Do you want to create the file?", "Data Writting Information", MessageBoxButtons.YesNo, MessageBoxIcon.Information) Then
+                If vbYes Then
+
+                End If
+            Else
+                Exit Sub
+            End If
+        End If
+    End Sub
+    Private Sub BtnReadData_Click(sender As Object, e As EventArgs) Handles BtnReadData.Click
+        Dim count As Integer
+        Dim currentrow() As String
+        Using iread As New Microsoft.VisualBasic.FileIO.TextFieldParser(MasterFile)
+            iread.TextFieldType = FileIO.FieldType.Delimited
+            iread.SetDelimiters(",")
+
+            While Not iread.EndOfData
+
+                currentrow = iread.ReadFields()
+                Try
+                    ReDim Preserve StudentNo(count)
+                    ReDim Preserve Surname(count)
+                    ReDim Preserve Initials(count)
+                    ReDim Preserve SubjectCode(count)
+                    ReDim Preserve TestMark1(count)
+                    ReDim Preserve TestMark2(count)
+                    ReDim Preserve Pract1(count)
+                    ReDim Preserve Pract2(count)
+                    ReDim Preserve IE(count)
+                    ReDim Preserve Isat(count)
+
+
+                    StudentNo(count) = currentrow(0)
+                    Surname(count) = currentrow(1)
+                    Initials(count) = currentrow(2)
+                    SubjectCode(count) = currentrow(3)
+                    TestMark1(count) = currentrow(4)
+                    TestMark2(count) = currentrow(5)
+                    Pract1(count) = currentrow(6)
+                    Pract2(count) = currentrow(7)
+                    IE(count) = currentrow(8)
+                    Isat(count) = currentrow(9)
+
+                Catch ex As Exception
+                    MessageBox.Show("Line" & ex.Message)
+                End Try
+
+                count = count + 1
+            End While
+
+            BtnReadData.Enabled = False
+        End Using
+    End Sub
+End Class
